@@ -12,25 +12,24 @@
         .phase { display: none; flex-direction: column; align-items: center; width: 95%; text-align: center; }
         .active { display: flex; }
         
-        /* Hacker/Terminal Styling (Stays Green) */
+        /* Hacker/Terminal (Green) */
         #terminal { text-align: left; font-size: 1rem; color: #00ff41; font-family: 'Courier New', monospace; width: 85%; line-height: 1.5; }
         
-        /* Vibrant Theme for Games */
-        .pink-theme { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #d32f2f; height: 100vh; width: 100vw; position: fixed; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        input { background: white; border: 2px solid #9c27b0; color: #9c27b0; padding: 15px; font-size: 1.2rem; text-align: center; margin-top: 20px; border-radius: 15px; outline: none; }
-        #pongCanvas { background: rgba(255, 255, 255, 0.5); border: 3px solid #e91e63; margin-top: 20px; touch-action: none; border-radius: 15px; }
+        /* Vibrant Theme */
+        .vibrant-theme { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #d32f2f; height: 100vh; width: 100vw; position: fixed; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        input { background: white; border: 3px solid #9c27b0; color: #9c27b0; padding: 15px; font-size: 1.2rem; text-align: center; margin-top: 20px; border-radius: 15px; outline: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        #pongCanvas { background: rgba(255, 255, 255, 0.6); border: 3px solid #e91e63; margin-top: 20px; touch-action: none; border-radius: 20px; }
 
-        /* Final Interaction */
-        #mainContent { background: #fff5f8; }
-        #yesBtn { padding: 20px 40px; font-size: 1.5rem; background: #4caf50; color: white; border: none; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; z-index: 100; font-weight: bold; }
-        #noBtn { padding: 15px 30px; background: #f44336; color: white; border: none; border-radius: 50px; cursor: pointer; z-index: 50; }
+        /* YES/NO Interaction */
+        #yesBtn { padding: 20px 40px; font-size: 1.5rem; background: #4caf50; color: white; border: none; border-radius: 50px; cursor: pointer; transition: all 0.2s ease-out; z-index: 100; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        #noBtn { padding: 15px 30px; background: #f44336; color: white; border: none; border-radius: 50px; cursor: pointer; z-index: 50; font-weight: bold; }
         
-        /* Certificate & Final Screen */
+        /* Final Screen */
         #finalScreen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #9c27b0; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; color: white; }
-        #certificate { width: 300px; padding: 25px; border: 8px solid #ff4081; background: white; color: #d32f2f; text-align: center; margin-bottom: 20px; border-radius: 20px; }
-        .action-btn { background: #ff4081; color: white; border: none; padding: 15px 30px; margin-top: 15px; font-weight: bold; cursor: pointer; border-radius: 50px; font-size: 1.1rem; }
+        #certificate { width: 320px; padding: 30px; border: 10px double #ff4081; background: white; color: #d32f2f; text-align: center; margin-bottom: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .action-btn { background: #ff4081; color: white; border: none; padding: 18px 35px; margin-top: 15px; font-weight: bold; cursor: pointer; border-radius: 50px; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         
-        .next { background: #9c27b0; color: white; border: none; padding: 12px 30px; margin-top: 20px; cursor: pointer; border-radius: 50px; font-weight: bold; }
+        .next-btn { background: #9c27b0; color: white; border: none; padding: 15px 40px; margin-top: 25px; cursor: pointer; border-radius: 50px; font-weight: bold; font-size: 1.1rem; }
     </style>
 </head>
 <body>
@@ -39,40 +38,40 @@
         <div id="terminal"></div>
     </div>
 
-    <div id="phase2" class="pink-theme">
-        <h2>DECRYPT THE KEY</h2>
-        <p>REVERSE THE WORD TO PROCEED:</p>
-        <p style="letter-spacing: 15px; color: #9c27b0; font-size: 2.5rem; font-weight: bold; margin: 20px 0;">I T O M</p>
-        <input type="text" id="verifyInput" placeholder="Enter word...">
-        <button class="next" onclick="checkDecrypt()">NEXT Step ❤️</button>
+    <div id="phase2" class="vibrant-theme">
+        <h2 style="text-transform: uppercase; letter-spacing: 2px;">Puzzle Challenge</h2>
+        <p>Unscramble the letters to find your name:</p>
+        <p id="scrambledWord" style="letter-spacing: 15px; color: #9c27b0; font-size: 3rem; font-weight: bold; margin: 20px 0; background: rgba(255,255,255,0.4); padding: 10px 30px; border-radius: 15px;"></p>
+        <input type="text" id="verifyInput" placeholder="Solve the jumble...">
+        <button class="next-btn" onclick="checkDecrypt()">Verify Identity ❤️</button>
     </div>
 
-    <div id="phase3" class="pink-theme">
-        <h2 style="color: #e91e63;">CATCH THE HEARTS</h2>
-        <p>Sync our vibe by catching 10 hearts!</p>
+    <div id="phase3" class="vibrant-theme">
+        <h2 style="color: #e91e63;">SYNC THE VIBE</h2>
+        <p>Catch 10 hearts to stabilize the connection!</p>
         <canvas id="pongCanvas" width="300" height="400"></canvas>
-        <p id="pongScore" style="color: #9c27b0; font-weight: bold; margin-top: 15px;">Hearts Collected: 0/10</p>
+        <p id="pongScore" style="color: #9c27b0; font-weight: bold; margin-top: 15px; font-size: 1.2rem;">Hearts Collected: 0/10</p>
     </div>
 
-    <div id="phase4" class="pink-theme" style="background: white;">
-        <h1 style="color: #e91e63; font-size: 2.2rem; margin-bottom: 40px;">Will you be my valentine friend baa??</h1>
-        <div id="btnContainer" style="display: flex; gap: 20px; align-items: center; justify-content: center; flex-wrap: wrap;">
+    <div id="phase4" class="vibrant-theme" style="background: #fff5f8;">
+        <h1 style="color: #e91e63; font-size: 2.2rem; margin-bottom: 50px; padding: 0 20px;">Will you be my valentine friend baa??</h1>
+        <div id="btnContainer" style="display: flex; gap: 30px; align-items: center; justify-content: center; flex-wrap: wrap;">
             <button id="yesBtn" onclick="finish()">YES</button>
             <button id="noBtn" onclick="growYes()">No</button>
         </div>
     </div>
 
     <div id="finalScreen">
-        <div id="certificate" style="display: block;">
-            <h2 style="margin: 0;">OFFICIAL BAA CARD</h2>
+        <div id="certificate">
+            <h2 style="margin: 0; font-family: serif;">OFFICIAL BAA CARD</h2>
             <hr style="border: 1px solid #ff4081; margin: 15px 0;">
-            <p>This certifies that</p>
-            <h1 style="margin: 10px 0; color: #9c27b0;">BAA</h1>
-            <p>is the officially the best</p>
+            <p style="font-style: italic;">This certifies that</p>
+            <h1 style="margin: 10px 0; color: #9c27b0; text-transform: uppercase;">BAA</h1>
+            <p>is officially the best</p>
             <h3 style="margin: 5px 0;">VALENTINE FRIEND</h3>
-            <p style="font-size: 0.8rem; margin-top: 15px;">Forever & Always ❤️</p>
+            <p style="font-size: 0.8rem; margin-top: 20px;">Forever & Always ❤️</p>
         </div>
-        <p style="font-size: 2rem; font-weight: bold;">thenkuuuu motiii ❤️</p>
+        <p style="font-size: 2.2rem; font-weight: bold; text-shadow: 2px 2px 10px rgba(0,0,0,0.2);">thenkuuuu motiii ❤️</p>
         <button class="action-btn" onclick="downloadCert()">Download Certificate Link</button>
     </div>
 
@@ -80,27 +79,45 @@
 
     <script>
         // Terminal Logic
-        const lines = ["> Initializing system...", "> Scanning profile...", "> Moti found...", "> Unlocking feelings..."];
+        const lines = ["> Initializing system...", "> Scrambling user data...", "> Security key generated...", "> Please prove you are Moti..."];
         let l = 0;
         function type() {
             if(l < lines.length) {
                 let p = document.createElement('p'); p.textContent = lines[l++];
                 document.getElementById('terminal').appendChild(p);
                 setTimeout(type, 1000);
-            } else { setTimeout(() => showPhase(2), 1000); }
+            } else { 
+                setTimeout(() => {
+                    showPhase(2);
+                    scramble("MOTI");
+                }, 1000); 
+            }
         }
         window.onload = type;
 
+        // Scramble Logic
+        function scramble(word) {
+            let a = word.split(""), n = a.length;
+            for(let i = n - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                let tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+            }
+            document.getElementById('scrambledWord').innerText = a.join("");
+        }
+
         function showPhase(n) {
-            document.querySelectorAll('.phase, .pink-theme').forEach(p => p.style.display = 'none');
-            const target = document.getElementById('phase' + n);
-            target.style.display = 'flex';
-            if(n > 1) document.body.style.background = "#ff9a9e";
+            document.querySelectorAll('.phase, .vibrant-theme').forEach(p => p.style.display = 'none');
+            document.getElementById('phase' + n).style.display = 'flex';
         }
 
         function checkDecrypt() {
-            if(document.getElementById('verifyInput').value.toLowerCase() === 'moti') { showPhase(3); initPong(); }
-            else { alert("Incorrect! Try again Moti."); }
+            if(document.getElementById('verifyInput').value.toUpperCase() === 'MOTI') { 
+                showPhase(3); 
+                initPong(); 
+            } else { 
+                alert("That's not it! Try again, Moti."); 
+                scramble("MOTI"); // Re-scramble on fail
+            }
         }
 
         // Pong Logic
@@ -122,33 +139,33 @@
                 if(count < 10) requestAnimationFrame(draw);
                 else showPhase(4);
             }
-            canvas.addEventListener('touchmove', (e) => { padX = e.touches[0].clientX - canvas.getBoundingClientRect().left - 40; });
+            canvas.addEventListener('touchmove', (e) => { 
+                let rect = canvas.getBoundingClientRect();
+                padX = e.touches[0].clientX - rect.left - 40; 
+            });
             draw();
         }
 
-        // NO button makes YES bigger
-        let yesSize = 1.5;
+        // YES button grows
+        let scale = 1.0;
         function growYes() {
-            yesSize += 0.5;
+            scale += 0.4;
             const yes = document.getElementById('yesBtn');
-            yes.style.fontSize = yesSize + 'rem';
-            yes.style.padding = (20 * (yesSize/1.5)) + 'px ' + (40 * (yesSize/1.5)) + 'px';
-            if(yesSize > 5) {
-                document.getElementById('noBtn').style.display = 'none';
-            }
+            yes.style.transform = `scale(${scale})`;
+            if(scale > 4) document.getElementById('noBtn').style.opacity = '0';
         }
 
         function finish() {
             document.getElementById('phase4').style.display = 'none';
             document.getElementById('finalScreen').style.display = 'flex';
             document.getElementById('bgMusic').play();
-            confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 }, colors: ['#ff4081', '#9c27b0', '#ffffff'] });
+            confetti({ particleCount: 250, spread: 80, origin: { y: 0.6 }, colors: ['#ff4081', '#9c27b0', '#ffffff'] });
         }
 
         function downloadCert() {
             html2canvas(document.querySelector("#certificate")).then(canvas => {
                 let link = document.createElement('a');
-                link.download = 'Moti_Baa_Certificate.png';
+                link.download = 'Moti_Baa_Friendship.png';
                 link.href = canvas.toDataURL();
                 link.click();
             });
