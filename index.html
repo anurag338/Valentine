@@ -3,211 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Valentine Protocol</title>
+    <title>Protocol: Valentine Friend</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: #000; color: #0f0; font-family: 'Courier New', monospace; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .phase { display: none; flex-direction: column; align-items: center; width: 90%; text-align: center; }
+        .active { display: flex; }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #000; /* Start black for terminal */
-            font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+        /* Hacker Phase */
+        #terminal { font-size: 1.1rem; text-align: left; }
 
-        /* Hacker Terminal Styles */
-        #terminal {
-            color: #0f0;
-            text-align: left;
-            width: 80%;
-            max-width: 600px;
-            font-size: 1.2rem;
-            line-height: 1.6;
-        }
+        /* Verification Phase */
+        input { background: #111; border: 1px solid #0f0; color: #0f0; padding: 10px; font-size: 1.2rem; text-align: center; margin-top: 20px; }
+        button.next { background: #0f0; color: #000; border: none; padding: 10px 20px; margin-top: 20px; cursor: pointer; font-weight: bold; }
 
-        /* Main Content Styles */
-        #mainContent {
-            display: none; /* Hidden until terminal finishes */
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%);
-            font-family: 'Arial Rounded MT Bold', sans-serif;
-            transition: opacity 1s ease-in;
-        }
+        /* Strength Test Phase */
+        #barContainer { width: 80%; height: 30px; border: 2px solid #0f0; margin: 20px 0; }
+        #progressBar { width: 0%; height: 100%; background: #0f0; transition: 0.1s; }
+        .profile-pic { width: 150px; border-radius: 10px; border: 2px solid #0f0; margin-bottom: 10px; }
 
-        h1 { color: white; font-size: 2rem; text-shadow: 2px 2px 10px rgba(0,0,0,0.1); padding: 20px; text-align: center; }
-
-        /* AI Reasoning Box */
-        #aiReasoning {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid white;
-            border-radius: 10px;
-            padding: 10px 20px;
-            color: white;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            backdrop-filter: blur(5px);
-        }
-
-        .btn-container {
-            position: relative;
-            width: 100%;
-            height: 250px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #yesBtn {
-            padding: 20px 50px;
-            font-size: 2rem;
-            background-color: #28a745; /* Green */
-            color: white;
-            border: 4px solid white;
-            border-radius: 50px;
-            cursor: pointer;
-            z-index: 100;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        #noBtn {
-            padding: 12px 25px;
-            font-size: 1.2rem;
-            background-color: #dc3545; /* Red */
-            color: white;
-            border: 2px solid white;
-            border-radius: 30px;
-            position: fixed;
-            z-index: 50;
-            touch-action: none;
-            animation: maniac 1.5s infinite alternate ease-in-out;
-        }
-
-        @keyframes maniac {
-            0% { top: 10%; left: 10%; }
-            33% { top: 80%; left: 50%; }
-            66% { top: 20%; left: 80%; }
-            100% { top: 70%; left: 20%; }
-        }
-
-        #thankYou {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, #00c6ff, #0072ff); /* Classy Blue */
-            color: white;
-            font-size: 2.5rem;
-            font-weight: bold;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            text-align: center;
-        }
+        /* Final Phase */
+        #mainContent { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%); color: white; width: 100vw; height: 100vh; position: fixed; }
+        #yesBtn { padding: 20px 50px; font-size: 2rem; background: #28a745; color: white; border: 4px solid white; border-radius: 50px; z-index: 100; }
+        #noBtn { padding: 10px 20px; background: #dc3545; color: white; border: 2px solid white; border-radius: 30px; position: fixed; z-index: 50; animation: maniac 1.5s infinite alternate ease-in-out; }
+        @keyframes maniac { 0% { top: 10%; left: 10%; } 100% { top: 80%; left: 80%; } }
+        
+        #thankYou { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0072ff; z-index: 1000; font-size: 2.5rem; justify-content: center; align-items: center; color: white; }
     </style>
 </head>
 <body>
 
-    <div id="terminal"></div>
+    <div id="phase1" class="phase active">
+        <div id="terminal"></div>
+    </div>
 
-    <div id="mainContent">
-        <div id="aiReasoning">AI Analysis: There is a 100% chance you will say Yes.</div>
-        <h1>Will you be my valentine friend baa??</h1>
-        <div class="btn-container">
-            <button id="yesBtn" onclick="celebrate()">YES</button>
+    <div id="phase2" class="phase">
+        <h2>DECRYPT ACCESS KEY</h2>
+        <p>HINT: What does he call you?</p>
+        <p style="letter-spacing: 5px; color: yellow;">O M T I</p>
+        <input type="text" id="verifyInput" placeholder="Enter Decrypted Word">
+        <button class="next" onclick="checkVerify()">VERIFY</button>
+    </div>
+
+    <div id="phase3" class="phase">
+        <img src="profile.jpg" class="profile-pic" alt="Profile">
+        <h2>STRENGTH SYNC</h2>
+        <p>Baa is doing pull-ups. Tap FAST to help him finish the set!</p>
+        <div id="barContainer"><div id="progressBar"></div></div>
+        <button class="next" onclick="doRep()">TAP TO LIFT!</button>
+    </div>
+
+    <div id="phase4" class="phase" style="width: 100vw; height: 100vh;">
+        <div id="mainContent">
+            <p style="margin-top: 50px; font-weight: bold;">AI Analysis: Compatibility 100%</p>
+            <h1>Will you be my valentine friend baa??</h1>
+            <button id="yesBtn" onclick="finish()">YES</button>
             <button id="noBtn" onmouseover="dodge()" ontouchstart="dodge()">No</button>
         </div>
     </div>
 
-    <div id="thankYou">
-        <div>theeennnkkkyooo mmmooottii hihihihhi ❤️</div>
-    </div>
-
-    <audio id="peacefulMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
-    </audio>
+    <div id="thankYou">theeennnkkkyooo mmmooottii hihihihhi ❤️</div>
+    <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
 
     <script>
-        // TERMINAL SCRIPT
-        const messages = [
-            "> Scanning user profile...",
-            "> Analyzing relationship compatibility...",
-            "> Compatibility: 100%",
-            "> Initializing Valentine Protocol...",
-            "> System ready."
-        ];
+        // Phase 1 Logic
+        const lines = ["> Initializing...", "> Scanning User...", "> Match found: MOTI", "> Level 3 Clearance Required..."];
+        let l = 0;
+        function type() {
+            if(l < lines.length) {
+                let p = document.createElement('p'); p.textContent = lines[l++];
+                document.getElementById('terminal').appendChild(p);
+                setTimeout(type, 1000);
+            } else { setTimeout(() => showPhase(2), 1000); }
+        }
+        window.onload = type;
 
-        let msgIndex = 0;
-        const terminal = document.getElementById('terminal');
-
-        function typeTerminal() {
-            if (msgIndex < messages.length) {
-                const line = document.createElement('p');
-                line.textContent = messages[msgIndex];
-                terminal.appendChild(line);
-                msgIndex++;
-                setTimeout(typeTerminal, 800);
-            } else {
-                setTimeout(() => {
-                    terminal.style.display = 'none';
-                    document.body.style.backgroundColor = '#ff9a9e';
-                    const main = document.getElementById('mainContent');
-                    main.style.display = 'flex';
-                }, 1000);
-            }
+        function showPhase(n) {
+            document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+            document.getElementById('phase' + n).classList.add('active');
         }
 
-        window.onload = typeTerminal;
+        // Phase 2 Logic
+        function checkVerify() {
+            if(document.getElementById('verifyInput').value.toLowerCase() === 'moti') { showPhase(3); }
+            else { alert("ACCESS DENIED. TRY AGAIN."); }
+        }
 
-        // MANIAC DODGE SCRIPT
+        // Phase 3 Logic
+        let progress = 0;
+        function doRep() {
+            progress += 5;
+            document.getElementById('progressBar').style.width = progress + '%';
+            if(progress >= 100) { showPhase(4); document.body.style.background = "#ff9a9e"; }
+        }
+
+        // Phase 4 Logic
         function dodge() {
-            const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
-            btn.style.animationDuration = '0.4s'; 
+            const b = document.getElementById('noBtn');
+            b.style.left = Math.random() * 80 + 'vw';
+            b.style.top = Math.random() * 80 + 'vh';
         }
 
-        // FINAL CELEBRATION
-        function celebrate() {
-            document.getElementById('mainContent').style.display = 'none';
-            const ty = document.getElementById('thankYou');
-            ty.style.display = 'flex';
-            
-            document.getElementById('peacefulMusic').play();
-
-            // CONFETTI CANNON BLAST
-            const duration = 5 * 1000;
-            const animationEnd = Date.now() + duration;
-            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-            function randomInRange(min, max) {
-              return Math.random() * (max - min) + min;
-            }
-
-            const interval = setInterval(function() {
-              const timeLeft = animationEnd - Date.now();
-
-              if (timeLeft <= 0) {
-                return clearInterval(interval);
-              }
-
-              const particleCount = 50 * (timeLeft / duration);
-              confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
-              confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
-            }, 250);
+        function finish() {
+            document.getElementById('phase4').style.display = 'none';
+            document.getElementById('thankYou').style.display = 'flex';
+            document.getElementById('bgMusic').play();
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         }
     </script>
 </body>
