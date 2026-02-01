@@ -3,33 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Protocol: Valentine Friend</title>
+    <title>AI Protocol: Level 3</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: #000; color: #0f0; font-family: 'Courier New', monospace; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .phase { display: none; flex-direction: column; align-items: center; width: 90%; text-align: center; }
+        body { margin: 0; background: #0a0a0a; color: #d4af37; font-family: 'Garamond', serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .phase { display: none; flex-direction: column; align-items: center; width: 95%; text-align: center; }
         .active { display: flex; }
-
-        /* Hacker Phase */
-        #terminal { font-size: 1.1rem; text-align: left; }
-
-        /* Verification Phase */
-        input { background: #111; border: 1px solid #0f0; color: #0f0; padding: 10px; font-size: 1.2rem; text-align: center; margin-top: 20px; }
-        button.next { background: #0f0; color: #000; border: none; padding: 10px 20px; margin-top: 20px; cursor: pointer; font-weight: bold; }
-
-        /* Strength Test Phase */
-        #barContainer { width: 80%; height: 30px; border: 2px solid #0f0; margin: 20px 0; }
-        #progressBar { width: 0%; height: 100%; background: #0f0; transition: 0.1s; }
-        .profile-pic { width: 150px; border-radius: 10px; border: 2px solid #0f0; margin-bottom: 10px; }
-
-        /* Final Phase */
-        #mainContent { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%); color: white; width: 100vw; height: 100vh; position: fixed; }
-        #yesBtn { padding: 20px 50px; font-size: 2rem; background: #28a745; color: white; border: 4px solid white; border-radius: 50px; z-index: 100; }
-        #noBtn { padding: 10px 20px; background: #dc3545; color: white; border: 2px solid white; border-radius: 30px; position: fixed; z-index: 50; animation: maniac 1.5s infinite alternate ease-in-out; }
-        @keyframes maniac { 0% { top: 10%; left: 10%; } 100% { top: 80%; left: 80%; } }
         
-        #thankYou { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0072ff; z-index: 1000; font-size: 2.5rem; justify-content: center; align-items: center; color: white; }
+        /* Hacker/Terminal Styling */
+        #terminal { text-align: left; font-size: 1rem; color: #00ff41; font-family: 'Courier New', monospace; width: 85%; line-height: 1.5; }
+        
+        /* Game UI */
+        input { background: transparent; border: 1px solid #d4af37; color: white; padding: 15px; font-size: 1.2rem; text-align: center; margin-top: 20px; border-radius: 5px; outline: none; }
+        #pongCanvas { background: #000; border: 1px solid #d4af37; margin-top: 20px; touch-action: none; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+
+        /* Final Maniac Question */
+        #mainContent { display: none; background: #0a0a0a; width: 100vw; height: 100vh; position: fixed; flex-direction: column; align-items: center; justify-content: center; color: #fff; }
+        #yesBtn { padding: 25px 70px; font-size: 2rem; background: #d4af37; color: #000; border: none; border-radius: 5px; cursor: pointer; z-index: 100; font-weight: bold; letter-spacing: 2px; }
+        #noBtn { padding: 12px 25px; background: #700000; color: white; border: 1px solid #d4af37; border-radius: 5px; position: fixed; z-index: 50; animation: maniac 0.6s infinite alternate; }
+        
+        @keyframes maniac { 0% { transform: translate(0,0); } 100% { transform: translate(150px, -200px); } }
+        
+        /* Certificate & Final Screen */
+        #finalScreen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0a0a; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
+        #certificate { width: 320px; padding: 30px; border: 10px double #d4af37; background: #fff; color: #000; text-align: center; margin-bottom: 20px; }
+        button.action-btn { background: #d4af37; color: #000; border: none; padding: 12px 25px; margin-top: 15px; font-weight: bold; cursor: pointer; border-radius: 3px; }
+        
+        .next { background: transparent; color: #d4af37; border: 1px solid #d4af37; padding: 12px 30px; margin-top: 20px; cursor: pointer; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -39,36 +41,50 @@
     </div>
 
     <div id="phase2" class="phase">
-        <h2>DECRYPT ACCESS KEY</h2>
-        <p>HINT: What does he call you?</p>
-        <p style="letter-spacing: 5px; color: yellow;">O M T I</p>
-        <input type="text" id="verifyInput" placeholder="Enter Decrypted Word">
-        <button class="next" onclick="checkVerify()">VERIFY</button>
+        <h2 style="letter-spacing: 3px;">IDENTITY DECRYPTION</h2>
+        <p>REVERSE THE KEY TO PROCEED:</p>
+        <p style="letter-spacing: 15px; color: #fff; font-size: 2rem; margin: 20px 0;">I T O M</p>
+        <input type="text" id="verifyInput" placeholder="Enter Code...">
+        <button class="next" onclick="checkDecrypt()">AUTHENTICATE</button>
     </div>
 
     <div id="phase3" class="phase">
-        <img src="profile.jpg" class="profile-pic" alt="Profile">
-        <h2>STRENGTH SYNC</h2>
-        <p>Baa is doing pull-ups. Tap FAST to help him finish the set!</p>
-        <div id="barContainer"><div id="progressBar"></div></div>
-        <button class="next" onclick="doRep()">TAP TO LIFT!</button>
+        <h2>STABILITY CALIBRATION</h2>
+        <p>Sync the connection by catching 10 pulses</p>
+        <canvas id="pongCanvas" width="300" height="400"></canvas>
+        <p id="pongScore" style="color: #d4af37; margin-top: 15px;">SYNC PROGRESS: 0%</p>
     </div>
 
-    <div id="phase4" class="phase" style="width: 100vw; height: 100vh;">
-        <div id="mainContent">
-            <p style="margin-top: 50px; font-weight: bold;">AI Analysis: Compatibility 100%</p>
-            <h1>Will you be my valentine friend baa??</h1>
+    <div id="mainContent">
+        <div style="border-left: 2px solid #d4af37; padding-left: 20px; text-align: left;">
+            <p style="color: #d4af37; font-size: 0.8rem; letter-spacing: 2px;">AI REPORT: COMPATIBILITY OPTIMIZED</p>
+            <h1 style="font-size: 2rem; margin: 10px 0;">Will you be my valentine friend baa??</h1>
+        </div>
+        <div style="margin-top: 80px;">
             <button id="yesBtn" onclick="finish()">YES</button>
             <button id="noBtn" onmouseover="dodge()" ontouchstart="dodge()">No</button>
         </div>
     </div>
 
-    <div id="thankYou">theeennnkkkyooo mmmooottii hihihihhi ❤️</div>
+    <div id="finalScreen">
+        <div id="certificate">
+            <h3 style="margin: 0;">CERTIFICATE OF AUTHENTICITY</h3>
+            <hr style="border: 0.5px solid #000; margin: 15px 0;">
+            <p style="font-size: 0.9rem;">This document confirms that</p>
+            <h2 style="margin: 10px 0; font-family: serif;">BAA</h2>
+            <p style="font-size: 0.9rem;">is officially the </p>
+            <h4 style="margin: 5px 0;">VALENTINE FRIEND</h4>
+            <p style="font-size: 0.7rem; margin-top: 15px;">Verified by Anurag's AI Protocol 2026</p>
+        </div>
+        <p style="color: #d4af37; font-size: 1.2rem;">theeennnkkkyooo mmmooottii ❤️</p>
+        <button class="action-btn" onclick="downloadCert()">DOWNLOAD CERTIFICATE</button>
+    </div>
+
     <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
 
     <script>
-        // Phase 1 Logic
-        const lines = ["> Initializing...", "> Scanning User...", "> Match found: MOTI", "> Level 3 Clearance Required..."];
+        // Terminal Logic
+        const lines = ["> Initializing secure handshake...", "> Identifying Moti...", "> Accessing memory archives...", "> Clearance level: Authorized."];
         let l = 0;
         function type() {
             if(l < lines.length) {
@@ -81,24 +97,38 @@
 
         function showPhase(n) {
             document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
-            document.getElementById('phase' + n).classList.add('active');
+            if(n === 4) document.getElementById('mainContent').style.display = 'flex';
+            else document.getElementById('phase' + n).classList.add('active');
         }
 
-        // Phase 2 Logic
-        function checkVerify() {
-            if(document.getElementById('verifyInput').value.toLowerCase() === 'moti') { showPhase(3); }
-            else { alert("ACCESS DENIED. TRY AGAIN."); }
+        function checkDecrypt() {
+            if(document.getElementById('verifyInput').value.toLowerCase() === 'moti') { showPhase(3); initPong(); }
+            else { alert("ERROR: INVALID KEY"); }
         }
 
-        // Phase 3 Logic
-        let progress = 0;
-        function doRep() {
-            progress += 5;
-            document.getElementById('progressBar').style.width = progress + '%';
-            if(progress >= 100) { showPhase(4); document.body.style.background = "#ff9a9e"; }
+        // Pong Logic
+        let count = 0;
+        function initPong() {
+            const canvas = document.getElementById('pongCanvas');
+            const ctx = canvas.getContext('2d');
+            let padX = 110, hX = 150, hY = 0;
+            function draw() {
+                ctx.clearRect(0,0,300,400);
+                ctx.fillStyle = '#d4af37'; ctx.fillRect(padX, 385, 80, 5);
+                ctx.font = "24px serif"; ctx.fillText("✨", hX, hY);
+                hY += 5;
+                if(hY > 380 && hX > padX && hX < padX + 80) {
+                    count++; document.getElementById('pongScore').innerText = "SYNC PROGRESS: " + (count*10) + "%";
+                    hY = 0; hX = Math.random() * 260;
+                }
+                if(hY > 400) { hY = 0; hX = Math.random() * 260; }
+                if(count < 10) requestAnimationFrame(draw);
+                else showPhase(4);
+            }
+            canvas.addEventListener('touchmove', (e) => { padX = e.touches[0].clientX - canvas.getBoundingClientRect().left - 40; });
+            draw();
         }
 
-        // Phase 4 Logic
         function dodge() {
             const b = document.getElementById('noBtn');
             b.style.left = Math.random() * 80 + 'vw';
@@ -106,10 +136,19 @@
         }
 
         function finish() {
-            document.getElementById('phase4').style.display = 'none';
-            document.getElementById('thankYou').style.display = 'flex';
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('finalScreen').style.display = 'flex';
             document.getElementById('bgMusic').play();
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            confetti({ particleCount: 150, colors: ['#d4af37', '#ffffff'] });
+        }
+
+        function downloadCert() {
+            html2canvas(document.querySelector("#certificate")).then(canvas => {
+                let link = document.createElement('a');
+                link.download = 'Friendship_Certificate.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
         }
     </script>
 </body>
