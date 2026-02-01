@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Will you be my Valentine?</title>
+    <title>Will you be my Valentine Friend?</title>
     <style>
         * {
             box-sizing: border-box;
@@ -17,59 +17,67 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #ffebee;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            /* Vibrant Gradient Background */
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             text-align: center;
         }
 
         h1 { 
-            color: #d32f2f; 
-            font-size: 2rem;
+            color: #ffffff; 
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
             padding: 0 20px;
+            z-index: 5;
         }
 
-        .buttons { 
+        .container {
             position: relative;
             width: 100%;
-            height: 100px;
+            height: 300px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 40px;
         }
 
         #yesBtn {
-            padding: 15px 35px;
-            font-size: 1.8rem;
-            background-color: #4caf50;
-            color: white;
+            padding: 18px 45px;
+            font-size: 2rem;
+            background: #ffffff;
+            color: #ff4b2b;
             border: none;
-            border-radius: 15px;
+            border-radius: 50px;
             cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             z-index: 100;
+            transition: transform 0.2s;
         }
+
+        #yesBtn:active { transform: scale(0.9); }
 
         #noBtn {
-            padding: 10px 20px;
+            padding: 10px 25px;
             font-size: 1.2rem;
-            background-color: #f44336;
+            background-color: rgba(255, 255, 255, 0.3);
             color: white;
-            border: none;
-            border-radius: 10px;
-            position: absolute;
-            transition: 0.1s linear;
+            border: 2px solid white;
+            border-radius: 30px;
+            position: fixed; /* Maniac movement across whole screen */
             touch-action: none;
-            /* Animation makes it constantly vibrating/moving on mobile */
-            animation: fastMove 0.4s infinite alternate;
+            z-index: 10;
+            /* Maniac Animation */
+            animation: maniacMove 1.5s infinite alternate ease-in-out;
         }
 
-        @keyframes fastMove {
-            0% { transform: translate(0, 0); }
-            25% { transform: translate(10px, -15px); }
-            50% { transform: translate(-15px, 10px); }
-            75% { transform: translate(15px, 15px); }
-            100% { transform: translate(-10px, -10px); }
+        @keyframes maniacMove {
+            0% { top: 10%; left: 10%; }
+            20% { top: 80%; left: 20%; }
+            40% { top: 30%; left: 70%; }
+            60% { top: 70%; left: 80%; }
+            80% { top: 20%; left: 40%; }
+            100% { top: 90%; left: 50%; }
         }
 
         #thankYou {
@@ -79,9 +87,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #fff0f3;
-            color: #d32f2f;
-            font-size: 2.2rem;
+            /* Classy Vibrant End Screen */
+            background: linear-gradient(to right, #ff5f6d, #ffc371);
+            color: white;
+            font-size: 3rem;
             font-weight: bold;
             flex-direction: column;
             align-items: center;
@@ -94,46 +103,44 @@
             position: fixed;
             bottom: -10vh;
             font-size: 2rem;
-            animation: floatUp 4s linear infinite;
+            animation: floatUp 3s linear infinite;
             z-index: 999;
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
     <div id="mainContent">
-        <h1>Will you be my valentine baa??</h1>
-        <div class="buttons">
+        <h1>Will you be my valentine friend baa??</h1>
+        <div class="container">
             <button id="yesBtn" onclick="sayThanks()">YES</button>
-            <button id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No</button>
+            <button id="noBtn" onmouseover="teleport()" ontouchstart="teleport()">No</button>
         </div>
     </div>
 
     <div id="thankYou">
-        <div>theeennnkkkyooo mmmooottii ❤️</div>
-        <div style="font-size: 1rem; margin-top: 15px; font-weight: normal;">(I love you, Ratnpriya!)</div>
+        <div>theeennnkkkyooo mmmooottii hihihihhi ❤️</div>
     </div>
 
     <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        function moveButton() {
+        // Combined with animation, this makes it impossible
+        function teleport() {
             const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth - 20);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight - 20);
-            
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
-            
-            // Randomize the animation speed each time she touches it to keep it chaotic
-            btn.style.animationDuration = (Math.random() * 0.2 + 0.1) + 's';
+            // Speed up the maniac movement on interaction
+            btn.style.animationDuration = '0.5s';
         }
 
         function sayThanks() {
@@ -142,19 +149,21 @@
             ty.style.display = 'flex';
             
             const music = document.getElementById('bgMusic');
-            music.play();
+            music.play().catch(e => console.log("Audio requires interaction first."));
 
-            setInterval(createHeart, 200);
+            setInterval(createHeart, 150);
         }
 
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.innerHTML = '❤️';
+            heart.innerHTML = '✨'; // Mixed with stars for classiness
+            if(Math.random() > 0.5) heart.innerHTML = '❤️';
+            
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            heart.style.animationDuration = (Math.random() * 1 + 2) + 's';
             document.body.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 4000);
+            setTimeout(() => { heart.remove(); }, 3000);
         }
     </script>
 </body>
